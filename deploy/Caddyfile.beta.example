@@ -1,0 +1,4 @@
+# Example only. Activate after private bootstrap and explicit approval.
+beta.auth.ploos.no {
+    reverse_proxy 127.0.0.1:9000
+}
