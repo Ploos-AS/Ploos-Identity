@@ -1,0 +1,24 @@
+groups:
+  - name: ploos-identity
+    rules:
+      - alert: IdentityProbeFailed
+        expr: probe_success{job="ploos-identity"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Identity endpoint probe failed"
+      - alert: IdentityProbeMissing
+        expr: absent(probe_success{job="ploos-identity",check="https"}) or absent(probe_success{job="ploos-identity",check="oidc"})
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Identity probe metrics missing"
+      - alert: IdentityCertificateExpiring
+        expr: probe_ssl_earliest_cert_expiry{job="ploos-identity"} - time() < 1209600
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Identity TLS certificate expires within 14 days"
